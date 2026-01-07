@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Renders IA - Construcción</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ Generador de Renders con IA</h1>
+            <p class="subtitle">Transforma tus planos en renders fotorealistas</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <form id="renderForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="blueprint">
+                            <span class="label-text">Subir Plano de Construcción</span>
+                            <span class="file-info">PNG, JPG, JPEG, GIF o BMP (máx. 16MB)</span>
+                        </label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="blueprint" name="blueprint" accept="image/*" required>
+                            <div class="file-preview" id="filePreview">
+                                <img id="previewImage" src="" alt="Vista previa">
+                                <span id="fileName">Selecciona un archivo o arrastra aquí</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prompt">
+                            <span class="label-text">Descripción del Render</span>
+                            <span class="file-info">Describe cómo quieres que se vea el render</span>
+                        </label>
+                        <textarea 
+                            id="prompt" 
+                            name="prompt" 
+                            rows="4" 
+                            placeholder="Ejemplo: Exterior moderno con fachada de vidrio y acero, iluminación natural al atardecer, jardines verdes, estilo contemporáneo minimalista..." 
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" id="generateBtn" class="btn-primary">
+                        <span class="btn-text">Generar Render</span>
+                        <span class="btn-loading" style="display: none;">
+                            <span class="spinner"></span>
+                            Generando...
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="resultSection" class="result-section" style="display: none;">
+                <h2>Render Generado</h2>
+                <div class="result-container">
+                    <img id="resultImage" src="" alt="Render generado">
+                    <div class="result-actions">
+                        <a id="downloadLink" href="" download="render.png" class="btn-secondary">
+                            📥 Descargar Render
+                        </a>
+                        <button onclick="resetForm()" class="btn-secondary">
+                            🔄 Generar Otro
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="errorSection" class="error-section" style="display: none;">
+                <div class="error-message">
+                    <span class="error-icon">⚠️</span>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by OpenAI DALL-E 3 | Generador de Renders para Construcción</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
