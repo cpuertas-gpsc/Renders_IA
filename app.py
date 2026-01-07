@@ -1,7 +1,5 @@
 import os
-import base64
-from io import BytesIO
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, abort
 from werkzeug.utils import secure_filename
 from openai import OpenAI
 from PIL import Image
@@ -30,25 +28,14 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
-def process_image(image_path, max_size=(1024, 1024)):
-    """Process and resize image for API consumption"""
-    img = Image.open(image_path)
-    
-    # Convert to RGB if necessary
-    if img.mode in ('RGBA', 'LA', 'P'):
-        background = Image.new('RGB', img.size, (255, 255, 255))
-        if img.mode == 'P':
-            img = img.convert('RGBA')
-        background.paste(img, mask=img.split()[-1] if img.mode in ('RGBA', 'LA') else None)
-        img = background
-    
-    # Resize if too large
-    img.thumbnail(max_size, Image.Resampling.LANCZOS)
-    
-    # Save to bytes
-    buffered = BytesIO()
-    img.save(buffered, format="PNG")
-    return base64.b64encode(buffered.getvalue()).decode('utf-8')
+def validate_image(image_path):
+    """Validate that the uploaded file is a valid image"""
+    try:
+        img = Image.open(image_path)
+        img.verify()
+        return True
+    except Exception:
+        return False
 
 
 @app.route('/')
@@ -82,8 +69,10 @@ def generate_render():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # Process image
-        image_base64 = process_image(filepath)
+        # Validate that it's a real image
+        if not validate_image(filepath):
+            os.remove(filepath)
+            return jsonify({'error': 'El archivo no es una imagen válida'}), 400
         
         # Create enhanced prompt for construction rendering
         enhanced_prompt = f"""Basándose en el plano arquitectónico proporcionado, crea un render fotorealista 3D de construcción con las siguientes características: {prompt}. 
@@ -102,6 +91,12 @@ def generate_render():
         # Get generated image URL
         image_url = response.data[0].url
         
+        # Clean up uploaded file after processing
+        try:
+            os.remove(filepath)
+        except Exception:
+            pass  # Ignore cleanup errors
+        
         return jsonify({
             'success': True,
             'image_url': image_url,
@@ -110,6 +105,13 @@ def generate_render():
         })
         
     except Exception as e:
+        # Clean up uploaded file on error
+        if 'filepath' in locals() and os.path.exists(filepath):
+            try:
+                os.remove(filepath)
+            except Exception:
+                pass  # Ignore cleanup errors
+        
         app.logger.error(f"Error generating render: {str(e)}")
         return jsonify({
             'error': f'Error al generar el render: {str(e)}'
@@ -119,6 +121,10 @@ def generate_render():
 @app.route('/generated/<path:filename>')
 def generated_file(filename):
     """Serve generated files"""
+    # Validate filename to prevent path traversal
+    filename = secure_filename(filename)
+    if not filename or '..' in filename or filename.startswith('/'):
+        abort(404)
     return send_from_directory(app.config['GENERATED_FOLDER'], filename)
 
 
