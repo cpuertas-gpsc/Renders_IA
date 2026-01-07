@@ -108,6 +108,17 @@ Para obtener mejores resultados, usa descripciones detalladas:
 - "Casa unifamiliar mediterránea con paredes blancas, tejas de barro, jardín con piscina, ambiente cálido"
 - "Edificio de apartamentos urbano con balcones amplios, diseño sostenible, paneles solares, entorno urbano"
 
+## Notas Importantes
+
+### Sobre DALL-E 3 y los Planos
+Esta aplicación utiliza OpenAI DALL-E 3 para generar renders. Es importante entender que:
+
+- **DALL-E 3 genera imágenes solo desde texto**: Aunque la aplicación solicita un plano como entrada, DALL-E 3 actualmente solo genera imágenes basadas en la descripción textual que proporcionas.
+- **El plano sirve de inspiración**: El plano cargado se valida para asegurar que es una imagen real, y ayuda contextualmente, pero la generación final se basa principalmente en tu prompt de texto.
+- **Descripción detallada es clave**: Cuanto más detallado sea tu prompt describiendo el estilo, materiales, iluminación y características del proyecto, mejor será el resultado.
+
+Para mejores resultados, describe en tu prompt los elementos clave que ves en el plano y cómo quieres que se visualicen en 3D.
+
 ## Notas de Seguridad
 
 - Nunca compartas tu clave API de OpenAI

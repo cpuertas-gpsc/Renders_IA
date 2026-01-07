@@ -143,9 +143,17 @@ Experimenta con diferentes estilos y acabados antes de la construcción.
 
 ### El render no se parece al plano
 **Solución**: 
-- DALL-E 3 genera interpretaciones creativas, no conversiones exactas
-- Ajusta tu descripción para ser más específico sobre elementos clave
-- El sistema usa el plano como inspiración, no como plantilla exacta
+- DALL-E 3 genera imágenes basadas en texto, no convierte directamente el plano en un render 3D
+- El plano sirve como inspiración y contexto, pero la generación se basa principalmente en tu descripción
+- Ajusta tu descripción de texto para ser más específico sobre los elementos que ves en el plano
+- Describe las características arquitectónicas clave: distribución, estilo, materiales, proporciones
+
+### ¿Por qué necesito subir un plano si DALL-E 3 solo usa texto?
+**Respuesta**: 
+- La validación del plano asegura que estás trabajando con un proyecto real
+- Te ayuda a ti como usuario a visualizar lo que quieres describir
+- En futuras versiones podría integrarse un modelo que analice el plano y genere automáticamente una descripción
+- El flujo de trabajo simula el proceso real de una empresa de construcción
 
 ## Limitaciones Técnicas
 
